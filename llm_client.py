@@ -9,28 +9,40 @@ from openai import OpenAI
 
 
 def get_client():
-    """Создание клиента OpenAI с настройками из переменных окружения."""
+    """Создание клиента OpenAI с настройками из переменных окружения или через ввод."""
     api_key = os.environ.get("OPENAI_API_KEY")
-    base_url = os.environ.get(
-        "OPENAI_BASE_URL",
-        "https://llmlite.ailab-copilot-prod.corp.tander.ru"
-    )
+    base_url = os.environ.get("OPENAI_BASE_URL")
+    model = os.environ.get("OPENAI_MODEL")
+    
+    # Если переменные не установлены, запрашиваем через input в нужном порядке
+    if not base_url:
+        base_url = input("Введите OPENAI_BASE_URL: ").strip()
+    
+    if not model:
+        model = input("Введите OPENAI_MODEL: ").strip()
     
     if not api_key:
-        print("Ошибка: не найден API-ключ. Установите переменную окружения OPENAI_API_KEY")
+        api_key = input("Введите OPENAI_API_KEY: ").strip()
+    
+    if not api_key or not base_url or not model:
+        print("Ошибка: все три переменные обязательны")
         sys.exit(1)
     
-    return OpenAI(
+    client = OpenAI(
         api_key=api_key,
         base_url=base_url
     )
+    
+    # Сохраняем модель в объекте клиента
+    client.model = model
+    return client
 
 
 def send_message(client, messages):
     """Отправка запроса в LLM и получение ответа."""
     try:
         response = client.chat.completions.create(
-            model="MagnitCopilot",
+            model=client.model,
             messages=messages,
             temperature=0.7
         )

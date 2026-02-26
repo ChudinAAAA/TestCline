@@ -9,24 +9,50 @@
 pip3 install -r requirements.txt
 ```
 
-2. Установите переменную окружения с API-ключом:
+## Запуск и тестирование
+
+### 1. Установка зависимостей
 ```bash
-export OPENAI_API_KEY="ваш_api_ключ"
+cd /Users/annacudinova/TestCline
+pip3 install -r requirements.txt
 ```
 
-## Использование
-
-Запустите скрипт:
+### 2. Запуск скрипта
 ```bash
 python3 llm_client.py
 ```
 
-Введите ваше сообщение и нажмите Enter. Для выхода введите `exit`.
+При первом запуске скрипт запросит параметры по очереди:
+```
+Введите OPENAI_BASE_URL: (ваш URL)
+Введите OPENAI_MODEL: (название модели)
+Введите OPENAI_API_KEY: (ваш ключ)
+```
+После этого появится диалоговое окно для ввода сообщений.
 
-## Переменные окружения
+### 3. Тестирование
+После ввода параметров введите сообщение:
+```
+Вы: напиши 3 предложения о котиках
+```
 
-- `OPENAI_API_KEY` — обязательно. API-ключ для аутентификации
-- `OPENAI_BASE_URL` — опционально. URL LiteLLM Proxy (по умолчанию: https://llmlite.ailab-copilot-prod.corp.tander.ru)
+Для выхода введите `exit`.
+
+**Примечание:** Ошибка 401 означает неверный API-ключ. Ключ должен начинаться с `sk-`.
+
+### Альтернатива: через переменные окружения
+Задайте переменные перед запуском (одной строкой):
+```bash
+export OPENAI_BASE_URL="ваш_url" OPENAI_MODEL="название_модели" OPENAI_API_KEY="ваш_ключ" && python3 llm_client.py
+```
+
+Или последовательно:
+```bash
+export OPENAI_BASE_URL="ваш_url"
+export OPENAI_MODEL="название_модели"
+export OPENAI_API_KEY="ваш_ключ"
+python3 llm_client.py
+```
 
 ## Пример
 
